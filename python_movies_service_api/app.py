@@ -1,4 +1,4 @@
-IP="127.0.0.1:9000"
+IP="181.50.100.167:9000"
 #IP="159.65.58.193:3000"
 
 #request.json['name'] para recibir y usar json de otras paginas
@@ -1011,7 +1011,7 @@ def forgot():
 
 
 if __name__=='__main__':
-    if IP=="159.65.58.193:9000": 
-        app.run(port=9000, debug=True, host ='159.65.58.193') #rebug restart all in server
+    if IP=="181.50.100.167:9000": 
+        app.run(port=9000, debug=True, host ='181.50.100.167') #rebug restart all in server
     else:
         app.run(port=9000, debug=True) #rebug restart all local
