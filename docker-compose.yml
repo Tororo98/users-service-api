@@ -4,7 +4,7 @@ services:
     image: mysql:5.7
     container_name: MySQLServiceDB
     ports: 
-        - "3306:3306"
+        - "3306:33060"
     environment:
         MYSQL_USER: dev
         MYSQL_PASSWORD: 123456
@@ -20,7 +20,7 @@ services:
     container_name: pythonServiceMoviesAPI
     command: python2 app.py
     ports:
-      - "5000:5000"
+      - "9000:9000"
     links:
       - db
     depends_on:
