@@ -10,4 +10,4 @@ WORKDIR /opt/www
 RUN apt-get update && apt-get install jq vim nano curl -y
 RUN pip2 install -r requirements.txt
 
-EXPOSE 5000
+EXPOSE 9000
