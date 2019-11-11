@@ -1,4 +1,4 @@
-IP="127.0.0.1:3000"
+IP="127.0.0.1:9000"
 #IP="159.65.58.193:3000"
 
 #request.json['name'] para recibir y usar json de otras paginas
@@ -26,7 +26,7 @@ from models import DinerUser, users, getUser
 app=Flask(__name__) #web service
 
 ############################################ MYSQL CONNECTION ############################################
-if IP=="159.65.58.193:3000":
+if IP=="159.65.58.193:9000":
     app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
     app.config['MYSQL_USER']='admin' #-> admin
     app.config['MYSQL_PASSWORD']='3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
@@ -1011,7 +1011,7 @@ def forgot():
 
 
 if __name__=='__main__':
-    if IP=="159.65.58.193:3000": 
-        app.run(port=3000, debug=True, host ='159.65.58.193') #rebug restart all in server
+    if IP=="159.65.58.193:9000": 
+        app.run(port=9000, debug=True, host ='159.65.58.193') #rebug restart all in server
     else:
-        app.run(port=3000, debug=True) #rebug restart all local
+        app.run(port=9000, debug=True) #rebug restart all local
