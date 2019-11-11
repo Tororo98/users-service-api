@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.7
+    container_name: MySQLServiceDB
+    ports: 
+        - "3306:3306"
+    environment:
+        MYSQL_USER: dev
+        MYSQL_PASSWORD: 123456
+        MYSQL_ROOT_PASSWORD: test 
+    volumes:
+        - ./databases/dump:/docker-entrypoint-initdb.d
+        - persistent:/var/lib/mysql
+    networks:
+        - default
+  moviesapi:
+    build: ./python_movies_service_api
+    image: python_service_movies_api
+    container_name: pythonServiceMoviesAPI
+    command: python2 app.py
+    ports:
+      - "5000:5000"
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - default
+volumes:
+    persistent:
+

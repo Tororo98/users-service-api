@@ -1,0 +1,220 @@
+{% extends "base_template.html" %}
+{% block title %}Tinder{% endblock %}
+{% block content %}
+
+
+<!--##################### Script de la API de instagram ###########################################################################-->
+<script type="text/javascript" src="{{ url_for('static', filename='test.js') }}"></script>
+<script>
+    (function($){
+        $(window).on('load', function(){
+            $.instagramFeed({
+                'username': 'misterwings',
+                'container': "#instagram-feed1",
+                'display_profile': true,
+                'display_biography': false,
+                'display_gallery': false,
+                'callback': null,
+                'styling': true,
+                'items': 0,
+                'items_per_row': 1,
+                'margin': 1
+            });
+            $.instagramFeed({
+                'username': 'carol_alt',
+                'container': "#instagram-feed2",
+                'display_profile': false,
+                'display_biography': true,
+                'display_gallery': true,
+                'callback': null,
+                'styling': true,
+                'items': 8,
+                'items_per_row': 1,
+                'margin': 1
+            });
+        });
+    })(jQuery);
+</script>
+
+
+
+<!--##################### Parte del Restaurante ###########################################################################-->
+<div class="restauranteGaleria">
+    <div id="instagram-feed1" class="instagram_feed1"> </div>
+    <center><p style="font-family:Roboto;color:black;font-size: 40px"><strong>Restaurante<br>
+        Mr. Wings</strong></p>
+        <p style="font-family:Roboto;color:black;font-size: 19px">
+            <i class="map marker alternate icon"></i>
+            Calle Busqueda # 25-59
+        </p>
+        <p style="font-family:Roboto;color:black;font-size: 19px">
+            <i class="calendar alternate outline icon"></i>
+            10/11/2019
+        </p>
+        <p style="font-family:Roboto;color:black;font-size: 19px">
+            <i class="clock icon"></i>
+            09:30 p.m
+        </p>
+        <button onclick="" class="ui inverted secondary button">MIRA MÁS</button>
+    </center>
+</div>
+
+
+<!--##################### Menu lateral ###########################################################################-->
+<div class="lateralTinder">
+    <div class="ui inverted segment">
+        <div class="ui inverted secondary pointing menu">
+            <a onclick="myFunction1()" class="item active">Mis Solicitudes</a>
+            <a onclick="myFunction()" class="item">Mis Reservas</a>
+        </div>     
+    </div>
+    <!--##################### Menu Mis Solicitudes ###########################################################################-->
+    <div id="Hola11">
+        {% for elemento in lista1 %}
+        <script>
+            (function($){
+                $(window).on('load', function(){
+                    $.instagramFeed({
+                        'username': '{{elemento[5]}}',
+                        'container': "#instagram-feed{{elemento[5]}}",
+                        'display_profile': true,
+                        'display_biography': false,
+                        'display_gallery': false,
+                        'callback': null,
+                        'styling': true,
+                        'items': 0,
+                        'items_per_row': 1,
+                        'margin': 1
+                    });
+                    $.instagramFeed({
+                        'username': '{{elemento[6]}}',
+                        'container': "#instagram-feed{{elemento[6]}}",
+                        'display_profile': true,
+                        'display_biography': false,
+                        'display_gallery': false,
+                        'callback': null,
+                        'styling': true,
+                        'items': 0,
+                        'items_per_row': 1,
+                        'margin': 1
+                    });
+                });
+            })(jQuery);
+        </script>
+        <div id="misSolicitudesPanel" class="misReservasPanel">
+                <div class="iconInstaMini">
+                    <div id="instagram-feed{{elemento[5]}}" class="instagram-feed{{elemento[5]}}"> </div>
+                </div>
+                <div class="iconInstaMini1">
+                    <div id="instagram-feed{{elemento[6]}}" class="instagram-feed{{elemento[6]}}"> </div>
+                </div>
+                    <div class="textoPanelNom">
+                    <p style="font-family:Roboto;color:white;font-size: 19px">
+                        {{elemento[0]}} con {{elemento[1]}}
+                    </p>
+                </div>
+                <div class="textoPanelFecha">
+                    <p style="font-family:Roboto;color:white;font-size: 12px">
+                        <i class="calendar alternate outline icon"></i>
+                        {{elemento[2]}}    
+                        <i class="clock icon"></i>
+                        {{elemento[3]}}
+                    </p>
+                </div>
+                <div class="textoPanelEstado">
+                        <p style="font-family:Roboto;color:white;font-size: 12px">
+                            <i class="question circle outline icon"></i>
+                            <strong>Estado: </strong>{{elemento[4]}}   
+                            <a onclick="$('.ui.modal.infoPerfil').modal('show');">|...Más info</a> 
+                        </p>
+                    </div>
+                <!--##################### Modal popup Info del perfil ###########################################################################-->
+                <div class="ui container">
+                    <div class="ui modal masInfo">
+                        <i class="close icon"></i>
+                        <div class="header">Más información</div>
+                        <div class="content">
+                            
+                        </div>
+                        <div class="actions">
+                            <div class="ui green approve button">Aceptar</div>
+                            <div class="ui red cancel button">Cancelar</div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--##################### Parte del instagram del perfil ###########################################################################-->
+<div id="galeriaInsta" class="instagramGaleria" style="overflow:hidden;">
+    <div id="instagram-feed2" class="instagram_feed"> </div>
+</div>
+<div class="iconIz">
+    <div onclick="$(galeriaInsta).scrollTo('-=555px');" class="circular ui animated button" tabindex="0">
+        <div class="hidden content">
+            <i class="left arrow icon"></i>
+        </div>
+    </div>
+</div>
+<div class="iconDr">
+    <div onclick="$(galeriaInsta).scrollTo('+=555px');" class="circular ui animated button" tabindex="0">
+        <div class="hidden content">
+            <i class="right arrow icon"></i>
+        </div>
+    </div>
+</div>
+<div id="NombreTinder">
+    <center><p style="font-family:Roboto;color:white;font-size: 50px"><strong>Carol Linda</strong></p></center>
+</div>
+<div class="iconInfo">
+    <button onclick="$('.ui.modal.infoPerfil').modal('show');" class="massive circular ui icon button">
+        <i class="icon info circle"></i>
+    </button>
+</div>
+<div class="iconCheck">
+    <button class="massive circular ui icon button">
+        <i class="icon check"></i>
+    </button>
+</div> 
+<div class="iconX">
+    <button class="massive circular ui icon button">
+        <i class="icon x icon"></i>
+    </button>
+</div>
+
+
+<!--##################### Modal popup Info del perfil ###########################################################################-->
+<div class="ui container">
+    <div class="ui modal infoPerfil">
+        <i class="close icon"></i>
+        <div class="header">Más información</div>
+        <div class="content">
+            
+        </div>
+        <div class="actions">
+            <div class="ui green approve button">Aceptar</div>
+            <div class="ui red cancel button">Cancelar</div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function myFunction() {
+        document.getElementById("Hola11").style.display = "none";
+    }
+    function myFunction1() {
+        document.getElementById("Hola11").style.display = "block";
+    }
+</script>
+    
+
+{% endblock %}
