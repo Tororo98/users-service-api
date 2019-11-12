@@ -2,7 +2,7 @@
 -- Last modification date: 2019-09-14 15:33:19.276
 
 --create databases
-CREATE DATABASE IF NOT EXISTS `dinerUser`;
+CREATE DATABASE IF NOT EXISTS `MoviesDB`;
 
 -- tables
 -- Table: Agreem_DinerU
