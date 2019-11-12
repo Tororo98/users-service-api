@@ -6,7 +6,7 @@ CREATE DATABASE IF NOT EXISTS `MoviesDB`;
 
 -- tables
 -- Table: Agreem_DinerU
-USE dinerUser;
+USE MoviesDB;
 DROP TABLE IF EXISTS `Agreem_DinerU`;
 CREATE TABLE `Agreem_DinerU` (
     `PK_idAgreemXDiner` int NOT NULL AUTO_INCREMENT,
