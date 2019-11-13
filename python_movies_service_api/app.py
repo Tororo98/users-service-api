@@ -1,4 +1,4 @@
-IP="181.50.100.167:9000"
+IP="181.50.100.167:9000" #tryin something here
 #IP="159.65.58.193:3000"
 
 #request.json['name'] para recibir y usar json de otras paginas
