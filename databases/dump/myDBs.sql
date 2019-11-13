@@ -137,27 +137,27 @@ ALTER TABLE `Agreem_DinerU` ADD CONSTRAINT `userXConve_Usuario` FOREIGN KEY `use
     REFERENCES `DinerUser` (`PK_idDiner`);
 
 -- Inserciones:
-insert into User (userType, username, password, email) VALUES(1,'usuarioPrueba','1234','micorreoprueba@outlook.com');
-insert into User (userType, username, password, email) VALUES(1,'Elxavier','yisus','xavi@outlook.com');
-insert into User (userType, username, password, email) VALUES(1,'amb18','amb','alejandroMeza@outlook.com');
-insert into User (userType, username, password, email) VALUES(1,'willi','front','william@yahoo.es');
-insert into User (userType, username, password, email) VALUES(1,'cucho','roman','christiandany@gmail.com');
-insert into User (userType, username, password, email) VALUES(1,'SebasT','toro50','storo@hotmail.com');
+insert into User (`userType`, `username`, `password`, `email`) VALUES(1,'usuarioPrueba','1234','micorreoprueba@outlook.com');
+insert into User (`userType`, `username`, `password`, `email`) VALUES(1,'Elxavier','yisus','xavi@outlook.com');
+insert into User (`userType`, `username`, `password`, `email`) VALUES(1,'amb18','amb','alejandroMeza@outlook.com');
+insert into User (`userType`, `username`, `password`, `email`) VALUES(1,'willi','front','william@yahoo.es');
+insert into User (`userType`, `username`, `password`, `email`) VALUES(1,'cucho','roman','christiandany@gmail.com');
+insert into User (`userType`, `username`, `password`, `email`) VALUES(1,'SebasT','toro50','storo@hotmail.com');
 -----------------------------------------------------------------------------------------------------------------------------------------------
-insert into DinerUser (FK_idUser,numDocument, firstname, secondname, firstLastname, secondLastname, address, telephone, payMethod) VALUES(1,1453487801,'pedro','pablo','leon','jaramillo','cra 44 #13-10',8295562,'tarjeta de credito');
+insert into DinerUser (`FK_idUser`,`numDocument`, `firstname`, `secondname`, `firstLastname`, `secondLastname`, `address`, `telephone`, `payMethod`) VALUES(1,1453487801,'pedro','pablo','leon','jaramillo','cra 44 #13-10',8295562,'tarjeta de credito');
 -----------------------------------------------------------------------------------------------------------------------------------------------
-insert into VIPMembership (FK_idDiner,cutDate) VALUES(1,'15/12/19');
+insert into VIPMembership (`FK_idDiner`,`cutDate`) VALUES(1,'15/12/19');
 -----------------------------------------------------------------------------------------------------------------------------------------------
-insert into Restaurant(name,description,puntuation,comments,address,telephone,email) VALUES('EL cielo', 'Este es un restaurante de lujo ubicado en bogotá',9,'None','cll 105 #45-72',3144789520,'ResElcielo@gmail.com');
+insert into Restaurant(`name`,`description`,`puntuation`,`comments`,`address`,`telephone`,`email`) VALUES('EL cielo', 'Este es un restaurante de lujo ubicado en bogotá',9,'None','cll 105 #45-72',3144789520,'ResElcielo@gmail.com');
 -----------------------------------------------------------------------------------------------------------------------------------------------
-insert into Agreement(FK_idRestaurant, nameAgreement, desdiscount, cutoffDate) VALUES(1,'convenio El cielo', 10, '24/11/19');
+insert into Agreement(`FK_idRestaurant`, `nameAgreement`, `desdiscount`, `cutoffDate`) VALUES(1,'convenio El cielo', 10, '24/11/19');
 -----------------------------------------------------------------------------------------------------------------------------------------------
-insert into Agreem_DinerU(FK_idDiner,FK_idAgreement)VALUES(1,1);
+insert into Agreem_DinerU(`FK_idDiner`,`FK_idAgreement`)VALUES(1,1);
 -----------------------------------------------------------------------------------------------------------------------------------------------
 insert into Reservation(FK_idRestaurant,FK_reservationCreator,FK_idTable,personInCharge,reservationDate,reservationHour,reservationType,cardNumber,reservationTotal,amountOfPeople,reservationStatus,comments)
     VALUES(1,4,5,'Camilo Rojas','01/10/19','9:00','normal',102394,300000,2,'creada','none');
 -----------------------------------------------------------------------------------------------------------------------------------------------
-insert into Res_DinerU(FK_idReservation,FK_idDiner,availableChairs)VALUES(1,1,2);   
+insert into Res_DinerU(`FK_idReservation`,`FK_idDiner`,`availableChairs`)VALUES(1,1,2);   
 -- End of file.
 
 /* CREACION DE FUNCIONES */
