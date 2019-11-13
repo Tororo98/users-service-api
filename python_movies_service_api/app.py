@@ -66,10 +66,10 @@ app=Flask(__name__) #web service
 # ##########################################################################################################
 
 # ################################################ SETTINGS ################################################
-# app.secret_key=' srguM44wgw45gewregkujfxhgzdgAHqgreggwwerigpewergWwERwrPegQ#$dgvsdgrLla%wg%Q24g5"vEssFDVSEv3Cr3t4SDFewr4tgsfdbvsd'
-# login_manager=LoginManager()
-# login_manager.login_view = "login"
-# login_manager.init_app(app)
+app.secret_key=' srguM44wgw45gewregkujfxhgzdgAHqgreggwwerigpewergWwERwrPegQ#$dgvsdgrLla%wg%Q24g5"vEssFDVSEv3Cr3t4SDFewr4tgsfdbvsd'
+login_manager=LoginManager()
+login_manager.login_view = "login"
+login_manager.init_app(app)
 
 ##########################################################################################################
 
@@ -993,14 +993,13 @@ def tinder():
         return render_template("tinder.html",lista1=lista1)
 
 
-
-# @login_manager.user_loader
-# def loadDinerUser(id):
-#     print("LOAD", users)
-#     for user in users:
-#         if user.id == int(id):
-#             return user
-#     return None
+@login_manager.user_loader
+def loadDinerUser(id):
+    print("LOAD", users)
+    for user in users:
+        if user.id == int(id):
+            return user
+    return None
 
 
 @app.route('/logout')
