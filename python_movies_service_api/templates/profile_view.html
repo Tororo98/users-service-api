@@ -1,8 +1,31 @@
 {% extends "base_template.html" %} {% block title %}Perfil de Usuario{% endblock %} {% block content %}
 <div id="pbackground">
+    <script>
+        (function($) {
+            $(window).on('load', function() {
+                $.instagramFeed({
+                    'username': '{{tmp2.igUser}}',
+                    'container': "#instagram-feedpw",
+                    'display_profile': true,
+                    'display_biography': false,
+                    'display_gallery': false,
+                    'callback': null,
+                    'styling': true,
+                    'items': 8,
+                    'items_per_row': 4,
+                    'margin': 1
+                });
+            });
+        })(jQuery);
+    </script>
     <!--<div id="player_1"><img src="{{ url_for('static', filename='images/layer_1.png') }}"></div>-->
     <div id="pBackground8"><img src="{{ url_for('static', filename='images/Background8.png') }}"></div>
-    <div id="pBackground10"><img src="{{ url_for('static', filename='images/Background10.png') }}"></div>
+    <div id="pBackground10">
+        <img src="{{ url_for('static', filename='images/Background10.png') }}">
+        <div class="instagramProfile">
+            <div id="instagram-feedpw" class="instagram_feedpw"></div>
+        </div>
+    </div>
     <!--<div id="pdashboard3avatar"><img src="{{ url_for('static', filename='images/dashboard3avatar.png') }}"></div>-->
     <div id="pSeparator"><img src="{{ url_for('static', filename='images/Separator.png') }}"></div>
     <div id="pSeparator2"><img src="{{ url_for('static', filename='images/Separator.png') }}"></div>
@@ -18,12 +41,12 @@
     </div>
     <div id="pJuanitaPerez">
         <p style="font-family:Roboto;color:white;font-size: 19px">
-            <i class="user icon"></i> {{tmp2.firstName}}
+            <i class="user icon"></i> {{tmp2.firstName}} {{tmp2.secondName}}
         </p>
     </div>
     <div id="pIngdeRequisitos">
         <p style="font-family:Roboto;color:white;font-size: 19px">
-            <i class="user secret icon"></i> {{tmp2.userName}}
+            <i class="instagram icon"></i> {{tmp2.igUser}}
         </p>
     </div>
     <div id="pjuanitarequiml">
@@ -57,56 +80,55 @@
 </div>
 
 <!--##################### Modal popup Modificar Usuario ###########################################################################-->
-<form action="" method="POST" novalidate>
-    {{ form1.hidden_tag() }}
-    <div class="ui container">
-        <div class="ui modal modifyUser">
-            <i class="close icon"></i>
-            <div class="header">Modificar Datos de Usuario</div>
-            <div class="content">
-                <div class="ui form">
+<div class="ui container">
+    <div class="ui modal modifyUser">
+        <i class="close icon"></i>
+        <div class="header">Modificar Datos de Usuario</div>
+        <div class="content">
+            <div class="ui form">
+                <form action="/actualizarDatos" method="POST">
                     <div class="three fields">
                         <div class="field">
                             <label>Nombre</label>
                             <div class="ui left icon input">
-                                {{form1.name(value=tmp2.firstName)}}
+                                <input type="text" name="nombre" value="{{tmp2.firstName}} {{tmp2.firstName}}" required>
                                 <i class="user icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>Apellido</label>
                             <div class="ui left icon input">
-                                {{form1.lastName(value=tmp2.firtsLastName)}}
+                                <input type="text" name="apellido" value="{{tmp2.firstLastName}} {{tmp2.firstLastName}}" required>
                                 <i class="user secret icon"></i>
                             </div>
                         </div>
                         <div class="disabled field">
                             <label>Correo Electrónico</label>
                             <div class="ui left icon input">
-                                {{form1.email(value=tmp2.email)}}
+                                <input type="email" name="correo" value="{{tmp2.email}}" required>
                                 <i class="at icon"></i>
                             </div>
                         </div>
                     </div>
                     <div class="three fields">
-                        <div class="disabled field">
-                            <label>Nombre de Usuario</label>
+                        <div class="field">
+                            <label>Instagram</label>
                             <div class="ui left icon input">
-                                {{form1.userName(value=tmp2.userName)}}
-                                <i class="user circle secret icon"></i>
+                                <input type="text" name="instagram" value="{{tmp2.igUser}}">
+                                <i class="instagram icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>Número de identificación</label>
                             <div class="ui left icon input">
-                                {{form1.numDocument(value=tmp2.numDocument)}}
+                                <input type="number" name="identificacion" value="{{tmp2.numDocument}}" required>
                                 <i class="id card icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>Teléfono</label>
                             <div class="ui left icon input">
-                                {{form1.telephone(value=tmp2.telephone)}}
+                                <input type="tel" name="telefono" value="{{tmp2.telephone}}" required>
                                 <i class="mobile alternate icon"></i>
                             </div>
                         </div>
@@ -115,134 +137,99 @@
                         <div class="field">
                             <label>Dirección</label>
                             <div class="ui left icon input">
-                                {{form1.address(value=tmp2.address)}}
+                                <input type="text" name="direccion" value="{{tmp2.address}}" required>
                                 <i class="home icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>Método de Pago</label>
                             <select class="ui fluid dropdown">
-							<option value="EF">Efectivo</option>
-							<option value="AL">Visa</option>
-							<option value="AK">Master Card</option>
-							<option value="AK">Maestro</option>
-						</select>
+                                <option value="EF">Efectivo</option>
+                                <option value="AL">Visa</option>
+                                <option value="AK">Master Card</option>
+                                <option value="AK">Maestro</option>
+						    </select>
                         </div>
                         <div class="field">
-                            <label>Cambiar Contraseña</label>
-                            <button onclick="$('.ui.modal.cambiarContrasena').modal('show');" class="ui labeled icon button w">
-							<i class="key icon"></i>
-							Cambiar Contraseña
-						</button>
-                            <!--<input type="file" name="myfile" />-->
+                            <label>Confirmar Contraseña</label>
+                            <div class="ui left icon input">
+                                <input type="password" name="contrasena" placeholder="Confirma tu contraseña para guardar cambios" required>
+                                <i class="key icon"></i>
+                            </div>
                         </div>
                     </div>
                     <div class="three fields">
                         <div class="field">
-                            <label>Membresia VIP</label>
-                            <button onclick="$('.ui.modal.membresiaVip').modal('show');" class="ui labeled icon button w">
-							<i class="star icon"></i>
-							Adquiere una Membresia VIP
-						</button>
-                            <!--<input type="file" name="myfile" />-->
+                        </div>
+                        <div class="field">
+                            <button class="ui green cancel button" name="btn" value="aceptar">Actualizar Datos</button>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="actions">
-                <div onclick="$('.ui.modal.confirmarContrasena').modal('show');" class="ui green approve button">Aceptar</div>
-                <div class="ui red cancel button">Cancelar</div>
+                </form>
             </div>
         </div>
-    </div>
-    <!--##################### Confirmar Contraseña ###########################################################################-->
-    <div class="ui container">
-        <div class="ui modal confirmarContrasena">
-            <i class="close icon"></i>
-            <div class="header">Confirmar Contraseña</div>
-            <div class="content">
-                <div class="ui form">
+        <div class="actions">
+            <div class="ui form">
+                <div class="three fields">
                     <div class="field">
-                        <label>Confirmar Contraseña</label>
-                        <div class="ui left icon input">
-                            {{form1.password}}
-                            <i class="key icon"></i>
-                        </div>
+                        <button onclick="$('.ui.modal.membresiaVip').modal('show');" class="ui labeled icon button w" type="button">
+                            <i class="star icon"></i> Adquiere una Membresia VIP
+                        </button>
+                    </div>
+                    <div class="field">
+                        <button onclick="$('.mini.modal.cambiarContrasena').modal('show');" class="ui labeled icon button w" type="button">
+							<i class="key icon"></i>
+							Cambiar Contraseña
+						</button>
+                    </div>
+                    <div class="field">
+                        <button class="ui red cancel button">Cancelar</button>
                     </div>
                 </div>
             </div>
-            <div class="actions">
-                {{ form1.submit1() }}
-                <div class="ui red cancel button">Cancelar</div>
-            </div>
         </div>
     </div>
-</form>
+</div>
+
 
 <!--##################### Cambiar Contraseña ###########################################################################-->
-<form action="" method="POST" novalidate>
-    {{ form2.hidden_tag() }}
-    <div class="ui container">
-        <div class="ui modal cambiarContrasena">
-            <i class="close icon"></i>
-            <div class="header">Cambiar Contraseña</div>
-            <div class="content">
-                <div class="ui form">
+<div class="ui container">
+    <div class="ui mini modal cambiarContrasena">
+
+        <i class="close icon"></i>
+        <div class="header">Cambiar Contraseña</div>
+        <div class="content">
+            <div class="ui form">
+                <form action="/cambiarContrasenaa" method="POST">
                     <div class="field">
                         <label>Contraseña Actual</label>
                         <div class="ui left icon input">
-                            {{form2.password1}} {% for error in form2.password1.errors %}
-                            <script>
-                                toastr.error('{{ error }}', 'Error al ingresar Confirmar Contraseña', {
-                                    "newestOnTop": true,
-                                    "closeButton": true,
-                                    "progressBar": true
-                                })
-                            </script>
-                            {% endfor %}
+                            <input type="password" name="contraActual" placeholder="CONTRASEÑA ANTIGUA" required>
                             <i class="key icon"></i>
                         </div>
                     </div>
                     <div class="field">
                         <label>Contraseña Nueva</label>
                         <div class="ui left icon input">
-                            {{form2.password2}} {% for error in form2.password2.errors %}
-                            <script>
-                                toastr.error('{{ error }}', 'Error al ingresar Confirmar Contraseña', {
-                                    "newestOnTop": true,
-                                    "closeButton": true,
-                                    "progressBar": true
-                                })
-                            </script>
-                            {% endfor %}
+                            <input type="password" name="contraNueva" placeholder="NUEVA CONTRASEÑA" required>
                             <i class="key icon"></i>
                         </div>
                     </div>
                     <div class="field">
                         <label>Confirmar Contraseña Actual</label>
                         <div class="ui left icon input">
-                            {{form2.password3}} {% for error in form2.password3.errors %}
-                            <script>
-                                toastr.error('{{ error }}', 'Error al ingresar Confirmar Contraseña', {
-                                    "newestOnTop": true,
-                                    "closeButton": true,
-                                    "progressBar": true
-                                })
-                            </script>
-                            {% endfor %}
+                            <input type="password" name="contraNuevaConf" placeholder="CONFIRMAR NUEVA CONTRASEÑA" required>
                             <i class="key icon"></i>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="actions">
-                {{form2.submit2()}}
-                <!--<div class="ui green approve button">Aceptar</div>-->
-                <div class="ui red cancel button">Cancelar</div>
+                    <div class="field" style="text-align: center;">
+                        <button class="ui green cancel button" name="btn1" value="cambiar">Cambiar Contraseña</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</form>
+</div>
 
 
 <!--##################### Modal Membresia VIP ###########################################################################-->
@@ -251,51 +238,46 @@
         <i class="close icon"></i>
         <div class="header">Adquirir Membresia VIP</div>
         <div class="content">
-            <div class="ui three column grid">
-                <div class="column">
-                    <div class="ui cards">
-                        <div class="card">
-                            <div class="content">
-                                <div class="header">
-                                    <center>$99.900 COP</center>
+            <form action="/botonMembresia" method="POST">
+                <div class="ui three column grid">
+                    <div class="column">
+                        <div class="ui cards">
+                            <div class="card">
+                                <div class="content">
+                                    <div style="text-align: center;" class="header">$99.900 COP</div>
+                                    <div style="text-align: center;" class="description">1 Mes </div>
                                 </div>
-                                <div class="description">Elliot Fu is a film-maker from New York. </div>
+                                <button class="ui green approve button" type="submit" name="membresiaBoton" value="mes1">Adquirir</button>
                             </div>
-                            <div class="ui bottom attached button"><i class="add icon"></i> Añadir amigo </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ui cards">
+                            <div class="card">
+                                <div class="content">
+                                    <div style="text-align: center;" class="header">$169.900 COP</div>
+                                    <div style="text-align: center;" class="description">2 Meses</div>
+                                </div>
+                                <button class="ui green approve button" type="submit" name="membresiaBoton" value="mes2">Adquirir</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ui cards">
+                            <div class="card">
+                                <div class="content">
+                                    <div style="text-align: center;" class="header"> $259.900 COP</div>
+                                    <div style="text-align: center;" class="description">3 Meses</div>
+                                </div>
+                                <button class="ui green approve button" type="submit" name="membresiaBoton" value="mes3">Adquirir</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="column">
-                    <div class="ui cards">
-                        <div class="card">
-                            <div class="content">
-                                <div class="header">
-                                    <center>$99.900 COP</center>
-                                </div>
-                                <div class="description">Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying. </div>
-                            </div>
-                            <div class="ui bottom attached button"><i class="add icon"></i> Añadir amigo </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="ui cards">
-                        <div class="card">
-                            <div class="content">
-                                <div class="header">
-                                    <center>$99.900 COP</center>
-                                </div>
-                                <div class="description">Jenny is a student studying Media Management at the New School </div>
-                            </div>
-                            <div class="ui bottom attached button"><i class="add icon"></i> Añadir amigo </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
         <div class="actions">
-            <!--<div class="ui green approve button">Aceptar</div>-->
-            <div class="ui red cancel button">Cancelar</div>
+            <div class="ui green cancel button">Aceptar</div>
         </div>
     </div>
 </div>
@@ -318,34 +300,33 @@
             <table class="ui celled table">
                 <thead>
                     <tr>
-                        <th>Restaurante</th>
-                        <th>Dirección</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Persona a Cargo</th>
+                        <th style="text-align: center;">Restaurante</th>
+                        <th style="text-align: center;">Dirección</th>
+                        <th style="text-align: center;">Fecha</th>
+                        <th style="text-align: center;">Hora</th>
+                        <th style="text-align: center;">Persona a Cargo</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for elemento in historialReservas %}
                     <tr>
-                        <td>{{elemento[0]}}</td>
-                        <td>{{elemento[1]}}</td>
-                        <td>{{elemento[2]}}</td>
-                        <td>{{elemento[3]}}</td>
-                        <td>{{elemento[4]}}</td>
+                        <td style="text-align: center;">{{elemento[0]}}</td>
+                        <td style="text-align: center;">{{elemento[1]}}</td>
+                        <td style="text-align: center;">{{elemento[2]}}</td>
+                        <td style="text-align: center;">{{elemento[3]}}</td>
+                        <td style="text-align: center;">{{elemento[4]}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
             {% else %}
             <center>
-                <p style="font-family:Roboto;color:black;font-size: 16px">No tienes Reservas Actualmente</p>
+                <p style="font-family:Roboto;color:black;font-size: 16px">Actualmente no tienes un historial de Reservas</p>
             </center>
             {% endif %}
         </div>
         <div class="actions">
             <div class="ui green approve button">Aceptar</div>
-            <div class="ui red cancel button">Cancelar</div>
         </div>
     </div>
 </div>
@@ -357,7 +338,6 @@
 <!--##################### Modal popup Reservas Actuales ###########################################################################-->
 <div class="ui container">
     <div class="ui modal reservasActuales">
-
         <i class="close icon"></i>
         <div class="header">Reservas Actuales</div>
         <div class="content">
@@ -365,30 +345,31 @@
             <table class="ui compact celled definition table">
                 <thead>
                     <tr>
-                        <th>¿Reserva Pública?</th>
-                        <th>Restaurante</th>
-                        <th>Dirección</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>No. Sillas</th>
-                        <th>¿Reserva Pública?</th>
+                        <th style="text-align: center;">¿Activar Reserva Pública?</th>
+                        <th style="text-align: center;">Restaurante</th>
+                        <th style="text-align: center;">Dirección</th>
+                        <th style="text-align: center;">Fecha</th>
+                        <th style="text-align: center;">Hora</th>
+                        <th style="text-align: center;">No. Sillas</th>
+                        <th style="text-align: center;">¿Reserva Pública?</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for elemento in hReservasActuales %}
                     <tr>
-                        <td>
+
+                        <td style="text-align: center;">
                             <form action="/botonPonerReservaPublica" method="POST">
                                 <button class="ui green approve button" type="submit" name="si" value="{{elemento[8]}}">Si</button>
                                 <button class="ui red approve button" type="submit" name="no" value="{{elemento[8]}}">No</button>
                             </form>
                         </td>
-                        <td>{{elemento[0]}}</td>
-                        <td>{{elemento[2]}}</td>
-                        <td>{{elemento[3]}}</td>
-                        <td>{{elemento[4]}}</td>
-                        <td>{{elemento[6]}}</td>
-                        <td>{{elemento[7]}}</td>
+                        <td style="text-align: center;">{{elemento[0]}}</td>
+                        <td style="text-align: center;">{{elemento[2]}}</td>
+                        <td style="text-align: center;">{{elemento[3]}}</td>
+                        <td style="text-align: center;">{{elemento[4]}}</td>
+                        <td style="text-align: center;">{{elemento[7]}}</td>
+                        <td style="text-align: center;">{{elemento[6]}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -406,27 +387,8 @@
 </div>
 
 
-<script>
-    (function($) {
-        $(window).on('load', function() {
-            $.instagramFeed({
-                'username': 'xavgar9',
-                'container': "#instagram-feedpw",
-                'display_profile': true,
-                'display_biography': false,
-                'display_gallery': false,
-                'callback': null,
-                'styling': true,
-                'items': 8,
-                'items_per_row': 4,
-                'margin': 1
-            });
-        });
-    })(jQuery);
-</script>
-<div class="instagramProfile">
-    <div id="instagram-feedpw" class="instagram_feedpw"></div>
-</div>
+
+
 
 
 
