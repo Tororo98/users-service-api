@@ -53,14 +53,16 @@ app=Flask(__name__) #web service
 ############################################ MYSQL CONNECTION ############################################
 if IP=="181.50.100.167:9000":
     app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
-    app.config['MYSQL_USER']='admin' #-> admin
-    app.config['MYSQL_PASSWORD']='3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
+    app.config['MYSQL_USER']='root' #-> admin
+    app.config['MYSQL_PASSWORD']='test' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
     app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
+    app.config['MYSQL_PORT']=33060
 else:
     app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
     app.config['MYSQL_USER']='root' #-> admin
-    app.config['MYSQL_PASSWORD']='' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
+    app.config['MYSQL_PASSWORD']='test' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
     app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
+    app.config['MYSQL_PORT']=33060
 
 mySQL=MySQL(app)   #data base connection
 ##########################################################################################################
@@ -984,8 +986,15 @@ def loadDinerUser(id):
 
 @app.route('/logout')
 def logout():
-    session.clear()
-    flash("Sesion cerrada Correctamente", "success")
+    idUser=session["PK_IdUser"]
+    url="http://181.50.100.167:4000/logout?id="+idUser
+    requests.post(url, params=None)
+    if requests.status_code==200:
+        session.clear()
+        flash("Sesion cerrada Correctamente", "success")
+    else:
+        flash("Error al cerrar sesion", "error")
+    
     return redirect(url_for('login'))  #redirect
 
 
