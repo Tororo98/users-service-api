@@ -2,11 +2,11 @@
 -- Last modification date: 2019-09-14 15:33:19.276
 
 --create databases
-CREATE DATABASE IF NOT EXISTS `MoviesDB`;
+CREATE DATABASE IF NOT EXISTS `dinerUser`;
 
 -- tables
 -- Table: Agreem_DinerU
-USE MoviesDB;
+USE dinerUser;
 DROP TABLE IF EXISTS `Agreem_DinerU`;
 CREATE TABLE `Agreem_DinerU` (
     `PK_idAgreemXDiner` int NOT NULL AUTO_INCREMENT,
