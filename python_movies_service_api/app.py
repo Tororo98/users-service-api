@@ -1,5 +1,5 @@
+#IP="127.0.0.1:3000"
 IP="181.50.100.167:9000"
-#IP="159.65.58.193:3000"
 """
 historialReservas = [["Cheers Pizza","Calle 10 #36-12","15/12/2020","08:30 p.m.","Manuel Turizo"],
                     ["American Pizza","Carrera 56 #43-09","15/12/2020","08:30 p.m.","Gabriela Ortiz"],
@@ -51,19 +51,18 @@ from models import DinerUser, users, getUser
 app=Flask(__name__) #web service
 
 ############################################ MYSQL CONNECTION ############################################
-# if IP=="159.65.58.193:3000":
-#     app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
-#     app.config['MYSQL_USER']='admin' #-> admin
-#     app.config['MYSQL_PASSWORD']='3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
-#     app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
-# else:
-#     app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
-#     app.config['MYSQL_USER']='root' #-> admin
-#     app.config['MYSQL_PASSWORD']='' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
-#     app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
+if IP=="181.50.100.167:9000":
+    app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
+    app.config['MYSQL_USER']='admin' #-> admin
+    app.config['MYSQL_PASSWORD']='3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
+    app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
+else:
+    app.config['MYSQL_HOST']='localhost' #data base ubication -> localhost
+    app.config['MYSQL_USER']='root' #-> admin
+    app.config['MYSQL_PASSWORD']='' #->3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2
+    app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
 
 mySQL=MySQL(app)   #data base connection
-
 ##########################################################################################################
 
 ################################################ SETTINGS ################################################
@@ -297,6 +296,7 @@ def make_session_permanent():
 """
 @app.route('/')
 def Index():
+    print(session)
     if "firstName" in session:
         print("INDEX")
         #print(session)
@@ -344,7 +344,7 @@ def login():
     except KeyError:
         ok=True
     if not ok:
-        return redirect(url_for('Index'))
+        return redirect(url_for('profile'))
     else:
         print("Inicio")
         if form.validate_on_submit():
@@ -376,6 +376,7 @@ def login():
                     PK_IdUser=response["content"]["id"]
                     userName=response["content"]["userName"]
                     userType=response["content"]["userType"]
+                    print("Hola", response["content"])
                     try:
                         """
                         print(len(password), password)
@@ -396,28 +397,29 @@ def login():
                             cur=mySQL.connection.cursor()
                             cur.execute('SELECT * FROM DinerUser WHERE FK_idUser = {0}'.format(PK_IdUser))
                             data=cur.fetchall()
-                            print(data)
-                            data=data[0]
+                            print(data)                            
                             cur.close()
-                            print(data)
                             if len(data)!=0:
+                                data=data[0]
                                 print("DATA mayor a cero")
-                                session["PK_IdUser"]=data[0]
-                                session["PK_IdDiner"]=data[1]
-                                session["numDocument"]=data[2]
-                                session["firstName"]=data[3]
-                                session["secondName"]=data[4]
-                                session["firstLastName"]=data[5]
-                                session["secondLastName"]=data[6]                                
-                                session["address"]=data[7]
-                                session["telephone"]=data[8]
-                                session["infoProfile"]=data[10]    
-                                session["igUser"]=data[11]
-                                session["email"]=email
-                                next_page = request.args.get('next')
-                                print(session)
+                                print(data)
+                                if len(data)!=0:
+                                    session["PK_IdUser"]=data[0]
+                                    session["PK_IdDiner"]=data[1]
+                                    session["numDocument"]=data[2]
+                                    session["firstName"]=data[3]
+                                    session["secondName"]=data[4]
+                                    session["firstLastName"]=data[5]
+                                    session["secondLastName"]=data[6]                                
+                                    session["address"]=data[7]
+                                    session["telephone"]=data[8]
+                                    session["infoProfile"]=data[10]    
+                                    session["igUser"]=data[11]
+                                    session["email"]=email
+                                    next_page = request.args.get('next')
+                                    print(session)
                             next_page=None
-                            if not next_page or url_parse(next_page).netloc != '':
+                            if (not next_page or url_parse(next_page).netloc != '') and len(data)!=0:
                                 flash("Bienvenido "+ session["firstName"], "success")
                                 #userType=3
                                 if userType==1:
@@ -495,21 +497,18 @@ def login():
                                 except Exception as e:
                                     print("Erda", e)
                                 print(lista1)
-
-
-
-
-
-
-
-
-
+                            else:
+                                flash("Error base de datos", "error")
+                                return redirect(url_for('login'))
                             return redirect(next_page)
                         else:
                             flash("Datos incorrectos", "error")
                     except Exception as e:
                         flash("Datos incorrectos", "error")
-                        print("+++login", e)                      
+                        print("+++login 1", e)    
+            else:
+                flash("El usuario o contrasena no estan correctos", "error")
+                print("+++login 2", e)                   
         ##############################################################################
 
     return render_template('login_form.html', form=form)
@@ -524,7 +523,7 @@ def signup():
     except KeyError:
         ok=True
     if not ok:
-        return redirect(url_for('Index'))
+        return redirect(url_for('profile'))
     else:
         if form.validate_on_submit():
             if request.method == 'POST':
@@ -569,11 +568,11 @@ def signup():
                         response=response.json()
                         if response["response"]==2:
                             address=" "; payMethod=" "
-                            user=DinerUser(numDocument, firstName, secondName, firstLastName, secondLastName, address, telephone, payMethod, email, userName, password)
+                            #user=DinerUser(numDocument, firstName, secondName, firstLastName, secondLastName, address, telephone, payMethod, email, userName, password)
                             #password=user.password
-                            PK_IdUser=str(response["content"]["_id"])
+                            PK_IdUser=str(response["content"]["id"])
                             print("+++++++++")                
-                            print("->", user.data())
+                            #print("->", user.data())
                             print("EEEEEEEEE", password)
                             print(PK_IdUser, address, payMethod)
                             userOk=False; emailOk=False
@@ -598,33 +597,37 @@ def signup():
                                 if data==0: userOk=True
                                 #######################  
                                 """                           
+                                print("Maquina")
+                                cur=mySQL.connection.cursor()
+                                cur.callproc('addUser', [PK_IdUser, 1, userName, password, email])                                        
+                                mySQL.connection.commit()
+                                cur.close()
+                                print("Buenas")
 
-                                if True and True:
-                                    cur=mySQL.connection.cursor()
-                                    cur.callproc('addUser', [PK_IdUser, 1, userName, password, email])                                        
-                                    mySQL.connection.commit()
-                                    cur.close()
+                                cur=mySQL.connection.cursor()
+                                cur.callproc('add_dinerUser', [PK_IdUser, userName, numDocument, firstName, secondName, firstLastName, secondLastName, address, telephone, payMethod, userName])                                    
+                                mySQL.connection.commit()
+                                cur.close() 
+                                print("Erda")
+                                
+                                next_page = request.args.get('next', None)
+                                if not next_page or url_parse(next_page).netloc != '':
+                                    next_page = url_for('login')
+                                return redirect(next_page)
 
-                                    cur=mySQL.connection.cursor()
-                                    cur.callproc('add_dinerUser', [PK_IdUser, userName, numDocument, firstName, secondName, firstLastName, secondLastName, address, telephone, payMethod])                                    
-                                    mySQL.connection.commit()
-                                    cur.close() 
-                                    
-                                    next_page = request.args.get('next', None)
-                                    if not next_page or url_parse(next_page).netloc != '':
-                                        next_page = url_for('login')
-                                    return redirect(next_page)
-                                else:
-                                    if not emailOk:
-                                        flash("Este email ya esta en uso", "error") 
-                                    if not userOk:
-                                        flash("Este nombre de usuario ya esta en uso", "error") 
                             except Exception as e:
                                 print("+++reg", e)
                         else:
-                            print("Response", response["Response"])
-                    else:
-                        print("error", response.status_code)
+                            print("Response", response["response"])
+                    else:                        
+                        response=response.json()
+                        print("error 0", response)
+                        print("error 1", response["content"])
+                        print()
+                        response=response["content"]
+                        print("error 3", response["message"])
+                        flash(str(response["message"]), "error")
+                        print("error 4", response.status_code)
                 else:
                     flash("La contrasenas no coinciden", "error") 
     return render_template("signup_form.html", form=form)
@@ -812,7 +815,7 @@ def profile():
 
 
         ##########################################################################################################################
-        #############################################HISTORIAL DE RESERVAS########################################################
+        #############################################  RESERVAS ACTUALES  ########################################################
         ##########################################################################################################################
 
         url="http://181.50.100.167:8000/api/getActiveReservationsByUserIdAndType/"+str(session["PK_IdDiner"])+"/0/" #esta url cambia por la de Laura
@@ -893,33 +896,6 @@ def profile():
             print("+++profile publicas ", e)
 
     return render_template("profile_view.html", tmp2=tmp2, historialReservas=historialReservas, hReservasActuales=hReservasActuales)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1135,4 +1111,7 @@ def cambiarContrasenaa():
 
 
 if __name__=='__main__':
-    app.run(port=9000, debug=True, host ='0.0.0.0') #rebug restart all in server
+    if IP=="181.50.100.167:9000": 
+        app.run(port=9000, debug=True, host ='0.0.0.0') #rebug restart all in server
+    else:
+        app.run(port=9000, debug=True) #rebug restart all local
