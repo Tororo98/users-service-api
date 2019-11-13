@@ -63,9 +63,10 @@ app=Flask(__name__) #web service
 #     app.config['MYSQL_DB']='dinerUser' #data base name -> dinerUser
 
 mySQL=MySQL(app)   #data base connection
-# ##########################################################################################################
 
-# ################################################ SETTINGS ################################################
+##########################################################################################################
+
+################################################ SETTINGS ################################################
 app.secret_key=' srguM44wgw45gewregkujfxhgzdgAHqgreggwwerigpewergWwERwrPegQ#$dgvsdgrLla%wg%Q24g5"vEssFDVSEv3Cr3t4SDFewr4tgsfdbvsd'
 login_manager=LoginManager()
 login_manager.login_view = "login"
@@ -640,6 +641,7 @@ def profile():
         return redirect(url_for('login'))   #redirect
     else:
         tmp2 = session
+        """
         form1=EditForm()
         form2=PasswordForm()
         print("PROFILE")
@@ -679,6 +681,7 @@ def profile():
                             print("+++edit", e)
                     else:
                         flash("Datos incorrectos", "error")
+            
 
         elif form2.validate_on_submit():    #cambiar la contrasena
             if request.method=='POST':
@@ -702,7 +705,7 @@ def profile():
                             flash("Contrasena actualizada", "success")
                         else:
                             flash("Los datos no son validos", "error")
-
+        """
         
         ##########################################################################################################################
         #############################################HISTORIAL DE RESERVAS########################################################
@@ -889,7 +892,7 @@ def profile():
         except Exception as e:
             print("+++profile publicas ", e)
 
-    return render_template("profile_view.html", form1=form1, form2=form2, tmp2=tmp2, historialReservas=historialReservas, hReservasActuales=hReservasActuales)
+    return render_template("profile_view.html", tmp2=tmp2, historialReservas=historialReservas, hReservasActuales=hReservasActuales)
 
 
 
@@ -993,6 +996,7 @@ def tinder():
         return render_template("tinder.html",lista1=lista1)
 
 
+
 @login_manager.user_loader
 def loadDinerUser(id):
     print("LOAD", users)
@@ -1078,37 +1082,57 @@ def botonPonerReservaPublica():
 @app.route('/actualizarDatos', methods=["GET","POST"])
 def actualizarDatos():
     if request.method == 'POST':
-        print("wwwwEntra")
-        nombre = request.form.get('nombre')
-        apellido = request.form.get('apellido')
-        correo = request.form.get('correo')
-        identificacion = request.form.get('identificacion')
-        telefono = request.form.get('telefono')
-        direccion = request.form.get('direccion')
-        contrasena = request.form.get('contrasena')
+        boton = request.form.get('btn')
+        if boton == "aceptar":
+            nombre = request.form.get('nombre')
+            apellido = request.form.get('apellido')
+            correo = request.form.get('correo')
+            identificacion = request.form.get('identificacion')
+            telefono = request.form.get('telefono')
+            direccion = request.form.get('direccion')
+            contrasena = request.form.get('contrasena')
+            
+            h1=hashlib.sha1(); h1.update(contrasena)
+            contrasena=h1; contrasena=str(contrasena.hexdigest())
+            print("contrasena",contrasena)
+            url="http://"+IP+"/loginLaverde/"+str(correo)+"/"+str(contrasena) #esta url cambia por la de laverde
+            response=requests.get(url, params=None)
+            if response.status_code==200:
+                response=response.json()
+                if response["Response"]==2:
+                    PK_IdUser=response["Content"]["PK_IdUser"]
+                    ############################################ EDIT USER TO DB ############################################
+                    try:
+                        cur=mySQL.connection.cursor()
+                        cur.callproc('edit_dinerUser', [identificacion, nombre, nombre, apellido, apellido, direccion, telefono, telefono])           
+                        mySQL.connection.commit()
+                        cur.close()
+                        print("EDITED: ", identificacion, nombre)
+                        flash("Informacion editada correctamente", "success")
+                    except Exception as e:
+                        print("+++edit", e)
+                else:
+                    flash("Datos incorrectos", "error")
+            return redirect(url_for('profile'))
+    return "nothing"
 
-        h1=hashlib.sha1(); h1.update(contrasena)
-        contrasena=h1; contrasena=str(contrasena.hexdigest())
 
-        url="http://"+IP+"/loginLaverde/"+str(correo)+"/"+str(contrasena) #esta url cambia por la de laverde
-        response=requests.get(url, params=None)
-        if response.status_code==200:
-            response=response.json()
-            if response["Response"]==2:
-                PK_IdUser=response["Content"]["PK_IdUser"]
-                ############################################ EDIT USER TO DB ############################################
-                try:
-                    cur=mySQL.connection.cursor()
-                    cur.callproc('edit_dinerUser', [identificacion, nombre, nombre, apellido, apellido, direccion, telefono, telefono])           
-                    mySQL.connection.commit()
-                    cur.close()
-                    print("EDITED: ", identificacion, nombre)
-                    flash("Informacion editada correctamente", "success")
-                except Exception as e:
-                    print("+++edit", e)
+@app.route('/cambiarContrasenaa', methods=["GET","POST"])
+def cambiarContrasenaa():
+    if request.method == 'POST':
+        boton = request.form.get('btn1')
+        if boton == "cambiar":
+            contraActual = request.form.get('contraActual')
+            contraNueva = request.form.get('contraNueva')
+            contraNuevaConf = request.form.get('contraNuevaConf')
+            if contraNueva == contraNuevaConf:
+                flash("Contrasena Cambiada", "success")
             else:
-                flash("Datos incorrectos", "error")
-    return redirect(url_for('profile'))
+                flash("Contrasenas deben ser iguales", "warning")
+            return redirect(url_for('profile'))
+    return "nothing"
+
+
 
 if __name__=='__main__':
     app.run(port=9000, debug=True, host ='0.0.0.0') #rebug restart all in server
