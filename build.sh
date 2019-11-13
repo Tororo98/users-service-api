@@ -1,6 +1,8 @@
 #!/bin/sh
 ACTION=$1
 if [ "$ACTION" == "create" ]; then    
+    tput setaf 2; tput bold; echo "**** creating all environment with docker-compose ****"
+    tput setaf 7; tput sgr0    
     # Create environment
     sudo docker-compose up -d
     
