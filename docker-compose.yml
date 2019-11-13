@@ -6,7 +6,7 @@ services:
     ports: 
         - "33060:3306"
     environment:
-        MYSQL_USER: dev
+        MYSQL_USER: admin
         MYSQL_PASSWORD: 123456
         MYSQL_ROOT_PASSWORD: 3ad853f1abc94a67dc9ceed07547d5aa6dd5ce129611feb2 
     volumes:
