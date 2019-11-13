@@ -994,13 +994,13 @@ def tinder():
 
 
 
-@login_manager.user_loader
-def loadDinerUser(id):
-    print("LOAD", users)
-    for user in users:
-        if user.id == int(id):
-            return user
-    return None
+# @login_manager.user_loader
+# def loadDinerUser(id):
+#     print("LOAD", users)
+#     for user in users:
+#         if user.id == int(id):
+#             return user
+#     return None
 
 
 @app.route('/logout')
